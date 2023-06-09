@@ -18,14 +18,6 @@ const char* fragmentShaderSource =
 "}\0"
 ;
 
-const char* fragmentShaderSource1 =
-"#version 330 core \n"
-"out vec4 FragColor;\n"
-"void main(){\n"
-"FragColor = vec4(1.0f, 1.0f, 0.2f, 1.0f);\n"
-"}\0"
-;
-
 struct RenderObject {
 	unsigned int vao;
 	unsigned int vbo;
@@ -117,27 +109,11 @@ int main()
 		std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
 	}
 
-	unsigned int fragmentShader1;
-	fragmentShader1 = glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(fragmentShader1, 1, &fragmentShaderSource1, NULL);
-	glCompileShader(fragmentShader1);
-	glGetShaderiv(fragmentShader1, GL_COMPILE_STATUS, &success);
-	if (!success) {
-		glGetShaderInfoLog(fragmentShader1, 512, NULL, infoLog);
-		std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
-	}
-
 	unsigned int shaderProgram;
 	shaderProgram = glCreateProgram();
 	glAttachShader(shaderProgram, vertexShader);
 	glAttachShader(shaderProgram, fragmentShader);
 	glLinkProgram(shaderProgram);
-
-	unsigned int shaderProgram1;
-	shaderProgram1 = glCreateProgram();
-	glAttachShader(shaderProgram1, vertexShader);
-	glAttachShader(shaderProgram1, fragmentShader1);
-	glLinkProgram(shaderProgram1);
 
 	glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
 	if (!success) {
@@ -146,7 +122,6 @@ int main()
 
 	glDeleteShader(vertexShader);
 	glDeleteShader(fragmentShader);
-	glDeleteShader(fragmentShader1);
 
 	RenderObject triangle1;
 	triangle1.vertices = new float[9];
@@ -235,7 +210,6 @@ int main()
 
 			glUseProgram(shaderProgram);
 			triangle1.draw();
-			glUseProgram(shaderProgram1);
 			triangle2.draw();
 
 			//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
