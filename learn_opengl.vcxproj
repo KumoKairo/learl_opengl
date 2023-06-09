@@ -79,7 +79,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <LibraryPath>C:\Users\Kumo\Documents\Projects\CPP\gl_include\lib;$(LibraryPath)</LibraryPath>
-    <IncludePath>C:\Users\Kumo\Documents\Projects\CPP\gl_include\include;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Users\Kumo\Documents\Projects\CPP\learn_opengl;C:\Users\Kumo\Documents\Projects\CPP\gl_include\include;$(IncludePath)</IncludePath>
     <ExternalIncludePath>C:\Users\Kumo\Documents\Projects\CPP\gl_include\include;$(ExternalIncludePath)</ExternalIncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -125,6 +125,9 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy /Y /S "$(ProjectDir)\Res\*" "$(TargetDir)"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -145,6 +148,13 @@
   <ItemGroup>
     <ClCompile Include="glad.c" />
     <ClCompile Include="main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Shader.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Res\Shaders\006\fragment.glsl" />
+    <None Include="Res\Shaders\006\vertex.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
