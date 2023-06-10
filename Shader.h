@@ -42,8 +42,6 @@ public:
 		const char* vertexShaderCode = vertexCode.c_str();
 		const char* fragmentShaderCode = fragmentCode.c_str();
 
-		std::cout << fragmentCode << std::endl;
-
 		unsigned int vertex, fragment;
 		int success;
 		char infoLog[512];

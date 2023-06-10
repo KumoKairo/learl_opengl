@@ -163,12 +163,13 @@ int main()
 	while (!glfwWindowShouldClose(window)) {
 		// input
 		processInput(window);
-
+		float time = glfwGetTime();
 		// rendering here
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		shader.Use();
+		shader.SetFloat("uOffset", sin(time) * -0.5f);
 		//glUseProgram(shaderProgram);
 
 		triangle1.draw();
