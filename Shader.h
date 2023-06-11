@@ -6,6 +6,7 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
+#include <glm/gtc/type_ptr.hpp>
 
 class Shader {
 public: 
@@ -95,6 +96,11 @@ public:
 
 	void SetFloat(const std::string& name, float value) {
 		glUniform1f(glGetUniformLocation(mId, name.c_str()), value);
+	}
+
+	void SetMat4(const std::string& name, glm::mat4 mat) {
+		glUniformMatrix4fv(glGetUniformLocation(mId, name.c_str()), 1, GL_FALSE, glm::value_ptr(mat));
+
 	}
 };
 
