@@ -40,6 +40,7 @@ int main()
 	}
 
 	glfwMakeContextCurrent(window);
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
 		std::cout << "Failed to initialize GLAD" << std::endl;
@@ -55,39 +56,78 @@ int main()
 	Shader shader("Res/Shaders/006/vertex.glsl", "Res/Shaders/006/fragment.glsl");
 
 	float vertices[] = {
-		// positions          // colors           // texture coords
-		 0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   2.0f, 2.0f, // top right
-		 0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   2.0f, 0.0f, // bottom right
-		-0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f, // bottom left
-		-0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 2.0f  // top left 
+		-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+		 0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
+		 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+		 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+		-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+
+		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+		 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+		 0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+		 0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+		-0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
+		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+
+		-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+		-0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+		-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+		 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+		 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+		 0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+		 0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+		 0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+		 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+		 0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
+		 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+		 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+
+		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+		 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+		 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+		 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+		-0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
+		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f
 	};
-	unsigned int indices[] = {
-		0, 1, 3, // first triangle
-		1, 2, 3  // second triangle
+
+	glm::vec3 cubePositions[] = {
+		glm::vec3(0.0f,  0.0f,  0.0f),
+		glm::vec3(2.0f,  5.0f, -15.0f),
+		glm::vec3(-1.5f, -2.2f, -2.5f),
+		glm::vec3(-3.8f, -2.0f, -12.3f),
+		glm::vec3(2.4f, -0.4f, -3.5f),
+		glm::vec3(-1.7f,  3.0f, -7.5f),
+		glm::vec3(1.3f, -2.0f, -2.5f),
+		glm::vec3(1.5f,  2.0f, -2.5f),
+		glm::vec3(1.5f,  0.2f, -1.5f),
+		glm::vec3(-1.3f,  1.0f, -1.5f)
 	};
-	unsigned int VBO, VAO, EBO;
+
+	unsigned int VBO, VAO;
 
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);
-	glGenBuffers(1, &EBO);
 
 	glBindVertexArray(VAO);
 
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
 	// position attribute
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
-	// color attribute
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-	glEnableVertexAttribArray(1);
 	// texture coord attribute
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
-	glEnableVertexAttribArray(2);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(1);
 
 	unsigned int mainTexture;
 	glGenTextures(1, &mainTexture);
@@ -130,14 +170,37 @@ int main()
 	shader.Use();
 	glUniform1i(glGetUniformLocation(shader.mId, "uMainTex"), 0);
 	glUniform1i(glGetUniformLocation(shader.mId, "uAddTex"), 1);
-	
+
 	float mix = 0.2f;
+	shader.SetFloat("uOffset", mix);
+
 	double prevTime = glfwGetTime();
 
-	glm::mat4 trans = glm::mat4(1.0f);
-	trans = glm::rotate(trans, glm::radians(45.0f), glm::vec3(0.0, 0.0, 1.0));
-	trans = glm::scale(trans, glm::vec3(0.5f, 0.5f, 0.5f));
-	shader.SetMat4("uTransform", trans);
+	glm::mat4 model = glm::mat4(1.0f);
+	model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0, 0.0, 0.0));
+	//model = glm::scale(model, glm::vec3(0.5f, 0.5f, 0.5f));
+	//model = glm::translate(model, glm::vec3(0.5, -0.5, 0.0));
+	glm::mat4 view;
+	view = glm::lookAt(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+
+	glm::mat4 projection = glm::mat4(1.0f);
+	projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
+
+	float yaw = -90.0f;
+	float pitch = 0.0f;
+
+	glm::vec3 direction;
+	
+
+	glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
+	glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
+
+	glEnable(GL_DEPTH_TEST);
+	const float cameraSpeed = 1.0f;
+
+	double lastX = 400.0, lastY = 300.0;
+
+	const float sensitivity = 1.0f;
 
 	// Render loop
 	while (!glfwWindowShouldClose(window)) {
@@ -145,30 +208,63 @@ int main()
 		processInput(window);
 
 		double time = glfwGetTime();
-		double delta = time - prevTime;
+		float delta = (float)time - prevTime;
 		prevTime = time;
-		int state = glfwGetKey(window, GLFW_KEY_UP);
-		if (state == GLFW_PRESS)
-		{
-			mix += 0.8f * delta;
+		float speed = cameraSpeed * delta;
+
+		double xPos, yPos;
+		glfwGetCursorPos(window, &xPos, &yPos);
+
+		double xOffset = (xPos - lastX) * sensitivity;
+		double yOffset = (lastY - yPos) * sensitivity;
+		lastX = xPos;
+		lastY = yPos;
+
+		yaw += xOffset * delta;
+		pitch += yOffset * delta;
+
+		if (pitch > 89.0f) {
+			pitch = 89.0f;
 		}
-		state = glfwGetKey(window, GLFW_KEY_DOWN);
-		if (state == GLFW_PRESS)
-		{
-			mix -= 0.8f * delta;
+		else if (pitch < -89.0f) {
+			pitch = -89.0f;
 		}
 
-		trans = glm::mat4(1.0f);
-		trans = glm::translate(trans, glm::vec3(0.5, -0.5, 0.0));
-		trans = glm::rotate(trans, glm::radians((float)time), glm::vec3(0.0, 0.0, 1.0));
-		shader.SetMat4("uTransform", trans);
+		direction.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+		direction.y = sin(glm::radians(pitch));
+		direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+		glm::vec3 cameraFront = glm::normalize(direction);// glm::vec3(0.0f, 0.0f, -1.0f);
+
+		int state = glfwGetKey(window, GLFW_KEY_W);
+		if (state == GLFW_PRESS)
+		{
+			cameraPos += cameraFront * speed;
+		}
+		state = glfwGetKey(window, GLFW_KEY_S);
+		if (state == GLFW_PRESS) 
+		{
+			cameraPos -= cameraFront * speed;
+		}
+		state = glfwGetKey(window, GLFW_KEY_A);
+		if (state == GLFW_PRESS)
+		{
+			cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * speed;
+		}
+		state = glfwGetKey(window, GLFW_KEY_D);
+		if (state == GLFW_PRESS)
+		{
+			cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * speed;
+		}
+
+		view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
 
 		// rendering here
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		shader.Use();
-		shader.SetFloat("uOffset", mix);
+		shader.SetMat4("view", view);
+		shader.SetMat4("projection", projection);
 
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, mainTexture);
@@ -176,7 +272,17 @@ int main()
 		glBindTexture(GL_TEXTURE_2D, addTexture);
 
 		glBindVertexArray(VAO);
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+		int i = 0;
+		for (glm::vec3 cube : cubePositions) {
+			glm::mat4 model = glm::mat4(1.0f);
+			model = glm::translate(model, cube);
+			float angle = time * (i++);
+			model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+			shader.SetMat4("model", model);
+
+			glDrawArrays(GL_TRIANGLES, 0, 36);
+		}
 
 		// check and call events and swap buffers
 		glfwSwapBuffers(window);
